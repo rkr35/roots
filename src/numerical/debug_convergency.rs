@@ -24,8 +24,8 @@
 
 use super::super::FloatType;
 use super::Convergency;
-use std::fmt::Display;
-use std::fmt::LowerExp;
+use core::fmt::Display;
+use core::fmt::LowerExp;
 
 /// Convergency provider for debugging.
 /// It will print out the error at each iteration.

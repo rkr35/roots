@@ -22,14 +22,14 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-use std::f32;
-use std::f64;
-use std::fmt::Debug;
-use std::ops::Add;
-use std::ops::Div;
-use std::ops::Mul;
-use std::ops::Neg;
-use std::ops::Sub;
+use core::f32;
+use core::f64;
+use core::fmt::Debug;
+use core::ops::Add;
+use core::ops::Div;
+use core::ops::Mul;
+use core::ops::Neg;
+use core::ops::Sub;
 
 /// Generic type that lists functions and constants needed in calculations.
 /// Default implementations for f32 and f64 are provided.

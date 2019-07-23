@@ -16,11 +16,11 @@ https://github.com/stiv-yakovenko
 
 /* Added to roots 0.0.5 by Mikhail Vorotilov on request of Stepan Yakovenko */
 
-use std::cmp;
-use std::collections::VecDeque;
-use std::fmt;
-use std::ops::Index;
-use std::ops::IndexMut;
+use core::cmp;
+use core::collections::VecDeque;
+use core::fmt;
+use core::ops::Index;
+use core::ops::IndexMut;
 
 use super::FloatType;
 

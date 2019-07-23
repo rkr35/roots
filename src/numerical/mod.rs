@@ -23,8 +23,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 use super::FloatType;
-use std::error::Error;
-use std::fmt;
+use core::error::Error;
+use core::fmt;
 
 /// Pair of the independent variable x and the function value y=F(x)
 #[derive(Debug, PartialEq)]
