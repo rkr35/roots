@@ -22,6 +22,7 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#![no_std]
 //#![crate_id = "roots"]
 #![crate_type = "lib"]
 
@@ -84,7 +85,6 @@ pub use self::analytical::roots::Roots;
 
 pub use self::numerical::brent::find_root_brent;
 pub use self::numerical::debug_convergency::DebugConvergency;
-pub use self::numerical::eigen::find_roots_eigen;
 pub use self::numerical::inverse_quadratic::find_root_inverse_quadratic;
 pub use self::numerical::inverse_quadratic::Parabola;
 pub use self::numerical::newton_raphson::find_root_newton_raphson;

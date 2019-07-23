@@ -23,7 +23,6 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 use super::FloatType;
-use core::error::Error;
 use core::fmt;
 
 /// Pair of the independent variable x and the function value y=F(x)
@@ -114,15 +113,6 @@ impl fmt::Display for SearchError {
         }
     }
 }
-impl Error for SearchError {
-    fn description(&self) -> &str {
-        match self {
-            SearchError::NoConvergency => "The algorithm could not converge within the given number of iterations",
-            SearchError::NoBracketing => "Initial values do not bracket zero",
-            SearchError::ZeroDerivative => "The algorithm cannot continue from the point where the derivative is zero",
-        }
-    }
-}
 
 /// The way to check if the algorithm has finished by either finding a root
 /// or reaching the iteration limit.
@@ -151,7 +141,6 @@ impl<F: FloatType> Convergency<F> for F {
 }
 
 pub mod brent;
-pub mod eigen;
 pub mod inverse_quadratic;
 pub mod newton_raphson;
 pub mod polynom;

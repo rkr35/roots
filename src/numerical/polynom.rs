@@ -27,6 +27,8 @@ use super::super::find_roots_linear;
 use super::super::find_roots_quadratic;
 use super::super::find_roots_quartic;
 use super::super::FloatType;
+use super::super::analytical::roots::Roots;
+
 use super::Convergency;
 use super::Interval;
 use super::Sample;
@@ -48,8 +50,6 @@ where
     fn value(&self, x: &F) -> F;
     fn value_and_derivative(&self, x: &F) -> ValueAndDerivative<F>;
     fn find_root(&self, bracketed_start: &mut Interval<F>, convergency: &mut Convergency<F>) -> Result<F, SearchError>;
-    fn derivative_polynom(&self) -> Vec<F>;
-    fn to_string(&self) -> String;
 }
 
 impl<F> Polynom<F> for [F]
@@ -147,41 +147,7 @@ where
         }
     }
 
-    fn derivative_polynom(&self) -> Vec<F> {
-        let mut result = Vec::from(self);
-        result.truncate(self.len() - 1);
-        let n: F = F::from(self.len() as i16);
-        let mut ni = F::one();
 
-        for x in result.iter_mut().rev() {
-            *x = (*x * ni) / n;
-            ni = ni + F::one();
-        }
-
-        result
-    }
-
-    fn to_string(&self) -> String {
-        let mut result = String::new();
-        let mut p = self.len();
-
-        if self.len() == 0 {
-            result.push_str("x=0")
-        } else {
-            result.push_str(&format!("x^{:?}", p));
-            for x in self.iter() {
-                p = p - 1;
-                if *x != F::zero() {
-                    if *x > F::zero() {
-                        result.push_str(&format!("+{:?}*x^{:?}", *x, p));
-                    } else {
-                        result.push_str(&format!("-{:?}*x^{:?}", -*x, p));
-                    }
-                }
-            }
-        }
-        result
-    }
 }
 
 /// Interval for searching roots
@@ -352,70 +318,6 @@ where
     }
 }
 
-fn find_root_intervals<F>(
-    polynom: &[F],
-    derivative_polynom: &[F],
-    convergency: &mut Convergency<F>,
-) -> Result<Vec<SearchInterval<F>>, SearchError>
-where
-    F: FloatType,
-{
-    let mut result = Vec::new();
-    let derivative_roots = find_roots_sturm(&derivative_polynom, convergency);
-    let symmetric_polynom = polynom.len() % 2 == 0;
-    let mut expect_positive = !symmetric_polynom;
-    let mut previous_interval: SearchInterval<F> = SearchInterval::Whole;
-    // Iterate through all roots of the derivative polynom
-    for derivative_root in derivative_roots.iter().filter_map(|s| match s {
-        &Ok(ref x) => Some(x),
-        &Err(_) => None,
-    }) {
-        let value = polynom.value(derivative_root);
-        if (expect_positive && value >= F::zero()) || (!expect_positive && value < F::zero()) {
-            // Transition found
-            let interval_to_add = match &previous_interval {
-                &SearchInterval::Whole => SearchInterval::First(Sample {
-                    x: *derivative_root,
-                    y: value,
-                }),
-                &SearchInterval::First(ref previous_end) => SearchInterval::Middle(Interval {
-                    begin: Sample {
-                        x: previous_end.x,
-                        y: previous_end.y,
-                    },
-                    end: Sample {
-                        x: *derivative_root,
-                        y: value,
-                    },
-                }),
-                _ => panic!("Unexpected type of the previous root interval!"),
-            };
-            result.push(interval_to_add);
-            expect_positive = !expect_positive;
-        }
-        previous_interval = SearchInterval::First(Sample {
-            x: *derivative_root,
-            y: value,
-        });
-    }
-    // All roots are checked, now the final step
-    match previous_interval {
-        SearchInterval::Whole => {
-            if !symmetric_polynom {
-                result.push(SearchInterval::Whole);
-            }
-            Ok(result)
-        }
-        SearchInterval::First(sample) => {
-            if sample.x < F::zero() {
-                result.push(SearchInterval::Last(sample));
-            }
-            Ok(result)
-        }
-        _ => Err(SearchError::NoBracketing),
-    }
-}
-
 /// Find all roots of the normalized polynomial
 /// x^n + a[0]*x^(n-1) + a[1]*x^(n-2) + ... + a[n-1] = 0
 /// using the Sturm's theorem recursively.
@@ -439,46 +341,20 @@ where
 ///             .collect();
 /// // Returns vector of roots filterin out all search errors;
 /// ```
-pub fn find_roots_sturm<F>(a: &[F], convergency: &mut Convergency<F>) -> Vec<Result<F, SearchError>>
+pub fn find_roots_sturm<F>(a: &[F]) -> Option<Roots<F>>
 where
     F: FloatType,
 {
-    match a.len() {
-        0 => Vec::new(),
-        1 => find_roots_linear(F::one(), a[0]).as_ref().iter().map(|s| Ok(*s)).collect(),
-        2 => find_roots_quadratic(F::one(), a[0], a[1])
-            .as_ref()
-            .iter()
-            .map(|s| Ok(*s))
-            .collect(),
-        3 => find_roots_cubic(F::one(), a[0], a[1], a[2])
-            .as_ref()
-            .iter()
-            .map(|s| Ok(*s))
-            .collect(),
-        4 => find_roots_quartic(F::one(), a[0], a[1], a[2], a[3])
-            .as_ref()
-            .iter()
-            .map(|s| Ok(*s))
-            .collect(),
+    Some(match a.len() {
+        0 => Roots::No([]),
+        1 => find_roots_linear(F::one(), a[0]),
+        2 => find_roots_quadratic(F::one(), a[0], a[1]),
+        3 => find_roots_cubic(F::one(), a[0], a[1], a[2]),
+        4 => find_roots_quartic(F::one(), a[0], a[1], a[2], a[3]),
         _ => {
-            let mut result = Vec::new();
-            let derivative_polynom = a.derivative_polynom();
-            match find_root_intervals(a, &derivative_polynom, convergency) {
-                Ok(root_intervals) => {
-                    for root_interval in &root_intervals {
-                        if let Ok(mut narrowed) = narrow_down(&root_interval, a, &derivative_polynom, convergency) {
-                            result.push(a.find_root(&mut narrowed, convergency));
-                        }
-                    }
-                }
-                Err(error) => {
-                    result.push(Err(error));
-                }
-            }
-            result
-        }
-    }
+            return None;
+        },
+    })
 }
 
 #[cfg(test)]

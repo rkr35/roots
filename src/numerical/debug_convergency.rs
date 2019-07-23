@@ -59,17 +59,14 @@ impl<F: FloatType> DebugConvergency<F> {
 impl<F: FloatType + Display + LowerExp> Convergency<F> for DebugConvergency<F> {
     /// Prints the value being checked
     fn is_root_found(&mut self, y: F) -> bool {
-        println!("#{} check root {:.15e}", self.iter, y);
         y.abs() < self.eps.abs()
     }
     /// Prints values being checked
     fn is_converged(&mut self, x1: F, x2: F) -> bool {
-        println!("#{} check convergency {:.15e}-{:.15e}", self.iter, x1, x2);
         (x1 - x2).abs() < self.eps.abs()
     }
     /// Updates internal iteration counter
     fn is_iteration_limit_reached(&mut self, iter: usize) -> bool {
-        println!("#{} check iteration limit {}", self.iter, iter);
         self.iter = iter;
         iter >= self.max_iter
     }
