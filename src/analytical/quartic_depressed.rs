@@ -47,7 +47,9 @@ pub fn find_roots_quartic_depressed<F: FloatType>(a2: F, a1: F, a0: F) -> Roots<
         super::biquadratic::find_roots_biquadratic(F::one(), a2, a0)
     } else if a0 == F::zero() {
         // a0 = 0; x^4 + a2*x^2 + a1*x = 0; reduce to normalized cubic and add zero root
-        super::cubic_normalized::find_roots_cubic_normalized(F::zero(), a2, a1).add_new_root(F::zero())
+        let mut roots = super::cubic_normalized::find_roots_cubic_normalized(F::zero(), a2, a1);
+        roots.add_new_root(F::zero());
+        roots
     } else {
         // Solve the auxiliary equation y^3 + (5/2)*a2*y^2 + (2*a2^2-a0)*y + (a2^3/2 - a2*a0/2 - a1^2/8) = 0
         let a2_pow_2 = a2 * a2;
@@ -59,11 +61,10 @@ pub fn find_roots_quartic_depressed<F: FloatType>(a2: F, a1: F, a0: F) -> Roots<
         );
 
         // At least one root always exists. The last root is the maximal one.
-        let y = *super::cubic_normalized::find_roots_cubic_normalized(b2, b1, b0)
-            .as_ref()
-            .iter()
-            .last()
-            .unwrap();
+        let y = match super::cubic_normalized::find_roots_cubic_normalized(b2, b1, b0).last() {
+            Some(last) => last,
+            None => return Roots::zero()
+        };
 
         let _a2_plus_2y = a2 + F::two() * y;
         if _a2_plus_2y > F::zero() {
@@ -72,15 +73,13 @@ pub fn find_roots_quartic_depressed<F: FloatType>(a2: F, a1: F, a0: F) -> Roots<
             let q0b = a2 + y + a1_div_2 / sqrt_a2_plus_2y;
 
             let mut roots = super::quadratic::find_roots_quadratic(F::one(), sqrt_a2_plus_2y, q0a);
-            for x in super::quadratic::find_roots_quadratic(F::one(), -sqrt_a2_plus_2y, q0b)
-                .as_ref()
-                .iter()
-            {
-                roots = roots.add_new_root(*x);
+
+            for x in super::quadratic::find_roots_quadratic(F::one(), -sqrt_a2_plus_2y, q0b) {
+                roots.add_new_root(x);
             }
             roots
         } else {
-            Roots::No([])
+            Roots::zero()
         }
     }
 }

@@ -50,10 +50,11 @@ pub fn find_roots_cubic_normalized<F: FloatType>(a2: F, a1: F, a0: F) -> Roots<F
     if d < F::zero() {
         let phi_3 = (r / (-q3).sqrt()).acos() / F::three();
         let sqrt_q_2 = F::two() * (-q).sqrt();
-
-        Roots::One([sqrt_q_2 * phi_3.cos() - a2_div_3])
-            .add_new_root(sqrt_q_2 * (phi_3 - F::two_third_pi()).cos() - a2_div_3)
-            .add_new_root(sqrt_q_2 * (phi_3 + F::two_third_pi()).cos() - a2_div_3)
+        
+        let mut roots = Roots::one(sqrt_q_2 * phi_3.cos() - a2_div_3);
+        roots.add_new_root(sqrt_q_2 * (phi_3 - F::two_third_pi()).cos() - a2_div_3);
+        roots.add_new_root(sqrt_q_2 * (phi_3 + F::two_third_pi()).cos() - a2_div_3);
+        roots
     } else {
         let sqrt_d = d.sqrt();
         let s = (r + sqrt_d).cbrt();
@@ -61,12 +62,14 @@ pub fn find_roots_cubic_normalized<F: FloatType>(a2: F, a1: F, a0: F) -> Roots<F
 
         if s == t {
             if s + t == F::zero() {
-                Roots::One([s + t - a2_div_3])
+                Roots::one(s + t - a2_div_3)
             } else {
-                Roots::One([s + t - a2_div_3]).add_new_root(-(s + t) / F::two() - a2_div_3)
+                let mut roots = Roots::one(s + t - a2_div_3);
+                roots.add_new_root(-(s + t) / F::two() - a2_div_3);
+                roots
             }
         } else {
-            Roots::One([s + t - a2_div_3])
+            Roots::one(s + t - a2_div_3)
         }
     }
 }

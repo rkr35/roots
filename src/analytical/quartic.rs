@@ -48,7 +48,9 @@ pub fn find_roots_quartic<F: FloatType>(a4: F, a3: F, a2: F, a1: F, a0: F) -> Ro
         super::cubic::find_roots_cubic(a3, a2, a1, a0)
     } else if a0 == F::zero() {
         // a0 = 0; x^4 + a2*x^2 + a1*x = 0; reduce to cubic and arrange results
-        super::cubic::find_roots_cubic(a4, a3, a2, a1).add_new_root(F::zero())
+        let mut roots = super::cubic::find_roots_cubic(a4, a3, a2, a1);
+        roots.add_new_root(F::zero());
+        roots
     } else if a1 == F::zero() && a3 == F::zero() {
         // a1 = 0, a3 =0; a4*x^4 + a2*x^2 + a0 = 0; solve bi-quadratic equation
         super::biquadratic::find_roots_biquadratic(a4, a2, a0)
@@ -71,12 +73,9 @@ pub fn find_roots_quartic<F: FloatType>(a4: F, a3: F, a2: F, a1: F, a0: F) -> Ro
             (_256 * d - F::three() * a_pow_4 - _64 * c * a + _16 * a_pow_2 * b) / _256,
         );
 
-        let mut roots = Roots::No([]);
-        for x in super::quartic_depressed::find_roots_quartic_depressed(p, q, r)
-            .as_ref()
-            .iter()
-        {
-            roots = roots.add_new_root(*x + subst);
+        let mut roots = Roots::zero();
+        for x in super::quartic_depressed::find_roots_quartic_depressed(p, q, r) {
+            roots.add_new_root(x + subst);
         }
         roots
     }
