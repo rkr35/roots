@@ -31,8 +31,7 @@ use core::ops::Mul;
 use core::ops::Neg;
 use core::ops::Sub;
 
-extern crate simdeez;
-use float::simdeez::libm::*;
+use simdeez::libm::*;
 
 /// Generic type that lists functions and constants needed in calculations.
 /// Default implementations for f32 and f64 are provided.

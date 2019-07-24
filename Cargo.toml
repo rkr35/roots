@@ -10,6 +10,7 @@ Library of well known algorithms for numerical root finding.
 """
 readme = "README.md"
 keywords = [ "math", "root", "numerical", "cubic", "quartic" ]
+edition = "2018"
 
 [badges]
 # Travis CI: `repository` is required. `branch` is optional; default is `master`
