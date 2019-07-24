@@ -31,6 +31,9 @@ use core::ops::Mul;
 use core::ops::Neg;
 use core::ops::Sub;
 
+extern crate simdeez;
+use float::simdeez::libm::*;
+
 /// Generic type that lists functions and constants needed in calculations.
 /// Default implementations for f32 and f64 are provided.
 pub trait FloatType:
@@ -123,19 +126,19 @@ impl FloatType for f32 {
         f32::consts::PI
     }
     fn sqrt(self) -> Self {
-        self.sqrt()
+        F32Ext::sqrt(self)
     }
     fn acos(self) -> Self {
-        self.acos()
+        F32Ext::acos(self)
     }
     fn cos(self) -> Self {
-        self.cos()
+        F32Ext::cos(self)
     }
     fn abs(self) -> Self {
-        self.abs()
+        F32Ext::abs(self)
     }
     fn powf(self, n: Self) -> Self {
-        self.powf(n)
+        F32Ext::powf(self, n)
     }
 }
 
@@ -173,19 +176,19 @@ impl FloatType for f64 {
         f64::consts::PI
     }
     fn sqrt(self) -> Self {
-        self.sqrt()
+        F64Ext::sqrt(self)
     }
     fn acos(self) -> Self {
-        self.acos()
+        F64Ext::acos(self)
     }
     fn cos(self) -> Self {
-        self.cos()
+        F64Ext::cos(self)
     }
     fn abs(self) -> Self {
-        self.abs()
+        F64Ext::abs(self)
     }
     fn powf(self, n: Self) -> Self {
-        self.powf(n)
+        F64Ext::powf(self, n)
     }
 }
 
