@@ -50,7 +50,7 @@ pub fn find_roots_biquadratic<F: FloatType>(a4: F, a2: F, a0: F) -> Roots<F> {
         super::quadratic::find_roots_quadratic(a2, F::zero(), a0)
     } else if a0 == F::zero() {
         // a0 = 0; a4*x^4 + a2*x^2 = 0; solve quadratic equation
-        let roots = super::quadratic::find_roots_quadratic(a4, F::zero(), a2);
+        let mut roots = super::quadratic::find_roots_quadratic(a4, F::zero(), a2);
         roots.add_new_root(F::zero());
         roots
     } else {
