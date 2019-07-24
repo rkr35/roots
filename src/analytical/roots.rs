@@ -36,26 +36,26 @@ pub struct Roots<F> where F: FloatType {
 impl<F> Roots<F> where F: FloatType {
     pub fn add_new_root(&mut self, root: F) {
         if self.num_roots < self.roots.len() {
-            // let i = {
-            //     let mut i = 0;
-            //     while i < self.num_roots {
-            //         if root < self.roots[i] {
-            //             break;
-            //         }
+            let i = {
+                let mut i = 0;
+                while i < self.num_roots {
+                    if root < self.roots[i] {
+                        break;
+                    }
 
-            //         i += 1;
-            //     }
-            //     i
-            // };
+                    i += 1;
+                }
+                i
+            };
 
-            // unsafe { 
-            //     self.roots[i..]
-            //         .as_mut_ptr()
-            //         .copy_to(self.roots[i+1..].as_mut_ptr(), self.num_roots - i);
-            // }
+            unsafe { 
+                self.roots[i..]
+                    .as_mut_ptr()
+                    .copy_to(self.roots[i+1..].as_mut_ptr(), self.num_roots - i);
+            }
             
-            // self.roots[i] = root;
-            // self.num_roots += 1;
+            self.roots[i] = root;
+            self.num_roots += 1;
         }
     }   
 
