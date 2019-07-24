@@ -80,50 +80,20 @@ mod test {
 
     #[test]
     fn test_find_roots_cubic_normalized() {
-        assert_eq!(find_roots_cubic_normalized(0f32, 0f32, 0f32), Roots::One([0f32]));
+        assert_eq!(find_roots_cubic_normalized(0f32, 0f32, 0f32).next(), Some(0f32));
 
-        match find_roots_cubic_normalized(0f64, -1f64, 0f64) {
-            Roots::Three(x) => {
-                assert_float_array_eq!(1e-15, x, [-1f64, 0f64, 1f64]);
-            }
-            _ => {
-                assert!(false);
-            }
-        }
+        assert_float_array_eq!(1e-15, find_roots_cubic_normalized(0f64, -1f64, 0f64), [-1f64, 0f64, 1f64]);
+        assert_float_array_eq!(1e-15, find_roots_cubic_normalized(1f64, -2f64, 2f64), [-2.269530842081142770853135f64]);
+        assert_float_array_eq!(1e-15, find_roots_cubic_normalized(0f64, -3f64, 2f64), [-2f64, 1f64]);
 
-        match find_roots_cubic_normalized(1f64, -2f64, 2f64) {
-            Roots::One(x) => {
-                assert_float_array_eq!(1e-15, x, [-2.269530842081142770853135f64]);
-            }
-            _ => {
-                assert!(false);
-            }
-        }
-
-        match find_roots_cubic_normalized(0f64, -3f64, 2f64) {
-            Roots::Two(x) => {
-                assert_float_array_eq!(1e-15, x, [-2f64, 1f64]);
-            }
-            _ => {
-                assert!(false);
-            }
-        }
-
-        match find_roots_cubic_normalized(-2f64, -3f64, 2f64) {
-            Roots::Three(x) => {
-                assert_float_array_eq!(
-                    1e-15,
-                    x,
-                    [
-                        -1.342923082777170208054859f64,
-                        0.5293165801288393926136314f64,
-                        2.813606502648330815441228f64
-                    ]
-                );
-            }
-            _ => {
-                assert!(false);
-            }
-        }
+        assert_float_array_eq!(
+            1e-15,
+            find_roots_cubic_normalized(-2f64, -3f64, 2f64),
+            [
+                -1.342923082777170208054859f64,
+                0.5293165801288393926136314f64,
+                2.813606502648330815441228f64
+            ]
+        );
     }
 }

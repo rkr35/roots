@@ -63,8 +63,8 @@ mod test {
 
     #[test]
     fn test_find_roots_linear() {
-        assert_eq!(find_roots_linear(0f32, 0f32), Roots::One([0f32]));
-        assert_eq!(find_roots_linear(2f64, 1f64), Roots::One([-0.5f64]));
-        assert_eq!(find_roots_linear(0f32, 1f32), Roots::No([]));
+        assert_eq!(find_roots_linear(0f32, 0f32).next(), Some(0f32));
+        assert_eq!(find_roots_linear(2f64, 1f64).next(), Some(-0.5f64));
+        assert_eq!(find_roots_linear(0f32, 1f32).next(), None);
     }
 }

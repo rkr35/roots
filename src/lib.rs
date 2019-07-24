@@ -56,14 +56,18 @@ macro_rules! assert_float_eq(
 #[cfg(test)]
 macro_rules! assert_float_array_eq(
     ($precision:expr, $given:expr , $expected:expr) => ({
-      match (&($precision), &($given), &($expected)) {
-          (precision_val, given_val, expected_val) => {
-            assert_eq!(given_val.len(),expected_val.len());
-            for i in 0..given_val.len() {
-              assert_float_eq!(precision_val,given_val[i],expected_val[i]);
-            }
-          }
-      }
+
+      let expected_len = $expected.len();
+      let mut seen = 0;
+      $given
+        .zip($expected.iter())
+        .for_each(|(g, &e)| {
+          seen += 1;
+          assert_float_eq!($precision, g, e);
+        });
+
+      assert_eq!(seen, expected_len);
+
     })
 );
 

@@ -90,35 +90,17 @@ mod test {
 
     #[test]
     fn test_find_roots_quartic_depressed() {
-        assert_eq!(find_roots_quartic_depressed(0f32, 0f32, 0f32), Roots::One([0f32]));
-        assert_eq!(find_roots_quartic_depressed(1f32, 1f32, 1f32), Roots::No([]));
+        assert_eq!(find_roots_quartic_depressed(0f32, 0f32, 0f32).next(), Some(0f32));
+        assert_eq!(find_roots_quartic_depressed(1f32, 1f32, 1f32).next(), None);
 
         // Thanks WolframAlpha for the test data
-        match find_roots_quartic_depressed(1f64, 1f64, -1f64) {
-            Roots::Two(x) => {
-                assert_float_array_eq!(1e-15, x, [-1f64, 0.5698402909980532659114f64]);
-            }
-            _ => {
-                assert!(false);
-            }
-        }
 
-        match find_roots_quartic_depressed(-10f64, 5f64, 1f64) {
-            Roots::Four(x) => {
-                assert_float_array_eq!(
-                    1e-15,
-                    x,
-                    [
-                        -3.3754294311910698f64,
-                        -0.1531811728532153f64,
-                        0.67861075799846644f64,
-                        2.84999984604581877f64
-                    ]
-                );
-            }
-            _ => {
-                assert!(false);
-            }
-        }
+        assert_float_array_eq!(1e-15, find_roots_quartic_depressed(1f64, 1f64, -1f64), [-1f64, 0.5698402909980532659114f64]);
+        assert_float_array_eq!(1e-15, find_roots_quartic_depressed(-10f64, 5f64, 1f64), [
+            -3.3754294311910698f64,
+            -0.1531811728532153f64,
+            0.67861075799846644f64,
+            2.84999984604581877f64
+        ]);
     }
 }

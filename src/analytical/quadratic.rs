@@ -100,29 +100,24 @@ mod test {
 
     #[test]
     fn test_find_roots_quadratic() {
-        assert_eq!(find_roots_quadratic(0f32, 0f32, 0f32), Roots::One([0f32]));
-        assert_eq!(find_roots_quadratic(1f32, 0f32, 1f32), Roots::No([]));
-        assert_eq!(find_roots_quadratic(1f64, 0f64, -1f64), Roots::Two([-1f64, 1f64]));
+        assert_eq!(find_roots_quadratic(0f32, 0f32, 0f32).next(), Some(0f32));
+        assert_eq!(find_roots_quadratic(1f32, 0f32, 1f32).next(), None);
+        assert_float_array_eq!(1e-15, find_roots_quadratic(1f64, 0f64, -1f64), [-1f64, 1f64]);
     }
 
     #[test]
     fn test_find_roots_quadratic_small_a2() {
-        assert_eq!(
-            find_roots_quadratic(1e-20f32, -1f32, -1e-30f32),
-            Roots::Two([-1e-30f32, 1e20f32])
-        );
-        assert_eq!(
-            find_roots_quadratic(-1e-20f32, 1f32, 1e-30f32),
-            Roots::Two([-1e-30f32, 1e20f32])
-        );
-        assert_eq!(find_roots_quadratic(1e-20f32, -1f32, 1f32), Roots::Two([1f32, 1e20f32]));
-        assert_eq!(find_roots_quadratic(-1e-20f32, 1f32, 1f32), Roots::Two([-1f32, 1e20f32]));
-        assert_eq!(find_roots_quadratic(-1e-20f32, 1f32, -1f32), Roots::Two([1f32, 1e20f32]));
+        assert_float_array_eq!(1e-15, find_roots_quadratic(1e-20f32, -1f32, -1e-30f32), [-1e-30f32, 1e20f32]);
+        assert_float_array_eq!(1e-15, find_roots_quadratic(-1e-20f32, 1f32, 1e-30f32), [-1e-30f32, 1e20f32]);
+        assert_float_array_eq!(1e-15, find_roots_quadratic(1e-20f32, -1f32, 1f32), [1f32, 1e20f32]);
+
+        assert_float_array_eq!(1e-15, find_roots_quadratic(-1e-20f32, 1f32, 1f32), [-1f32, 1e20f32]);
+        assert_float_array_eq!(1e-15, find_roots_quadratic(-1e-20f32, 1f32, -1f32), [1f32, 1e20f32]);
     }
 
     #[test]
     fn test_find_roots_quadratic_big_a1() {
-        assert_eq!(find_roots_quadratic(1f32, -1e15f32, -1f32), Roots::Two([-1e-15f32, 1e15f32]));
-        assert_eq!(find_roots_quadratic(-1f32, 1e15f32, 1f32), Roots::Two([-1e-15f32, 1e15f32]));
+        assert_float_array_eq!(1e-15, find_roots_quadratic(1f32, -1e15f32, -1f32), [-1e-15f32, 1e15f32]);
+        assert_float_array_eq!(1e-15, find_roots_quadratic(-1f32, 1e15f32, 1f32), [-1e-15f32, 1e15f32]);
     }
 }

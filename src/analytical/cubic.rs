@@ -64,15 +64,7 @@ mod test {
 
     #[test]
     fn test_find_roots_cubic() {
-        assert_eq!(find_roots_cubic(1f32, 0f32, 0f32, 0f32), Roots::One([0f32]));
-
-        match find_roots_cubic(1f64, 0f64, -1f64, 0f64) {
-            Roots::Three(x) => {
-                assert_float_array_eq!(1e-15, x, [-1f64, 0f64, 1f64]);
-            }
-            _ => {
-                assert!(false);
-            }
-        }
+        assert_eq!(find_roots_cubic(1f32, 0f32, 0f32, 0f32).next(), Some(0f32));
+        assert_float_array_eq!(1e-15, find_roots_cubic(1f64, 0f64, -1f64, 0f64), [-1f64, 0f64, 1f64]);
     }
 }

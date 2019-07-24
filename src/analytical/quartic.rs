@@ -87,29 +87,12 @@ mod test {
 
     #[test]
     fn test_find_roots_quartic() {
-        assert_eq!(find_roots_quartic(1f32, 0f32, 0f32, 0f32, 0f32), Roots::One([0f32]));
-        assert_eq!(find_roots_quartic(1f64, 0f64, 0f64, 0f64, -1f64), Roots::Two([-1f64, 1f64]));
-        assert_eq!(
-            find_roots_quartic(1f64, -10f64, 35f64, -50f64, 24f64),
-            Roots::Four([1f64, 2f64, 3f64, 4f64])
-        );
+        assert_eq!(find_roots_quartic(1f32, 0f32, 0f32, 0f32, 0f32).next(), Some(0f32));
+        assert_float_array_eq!(2e-15f64, find_roots_quartic(1f64, 0f64, 0f64, 0f64, -1f64), [-1f64, 1f64]);
+        assert_float_array_eq!(2e-15f64, find_roots_quartic(1f64, -10f64, 35f64, -50f64, 24f64), [1f64, 2f64, 3f64, 4f64]);
 
-        match find_roots_quartic(3f64, 5f64, -5f64, -5f64, 2f64) {
-            Roots::Four(x) => {
-                assert_float_array_eq!(2e-15f64, x, [-2f64, -1f64, 0.33333333333333333f64, 1f64]);
-            }
-            _ => {
-                assert!(false);
-            }
-        }
+        assert_float_array_eq!(2e-15f64, find_roots_quartic(3f64, 5f64, -5f64, -5f64, 2f64), [-2f64, -1f64, 0.33333333333333333f64, 1f64]);
 
-        match find_roots_quartic(3f32, 5f32, -5f32, -5f32, 2f32) {
-            Roots::Four(x) => {
-                assert_float_array_eq!(5e-7, x, [-2f32, -1f32, 0.33333333333333333f32, 1f32]);
-            }
-            _ => {
-                assert!(false);
-            }
-        }
+        assert_float_array_eq!(5e-7, find_roots_quartic(3f32, 5f32, -5f32, -5f32, 2f32), [-2f32, -1f32, 0.33333333333333333f32, 1f32]);
     }
 }
