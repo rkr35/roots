@@ -74,7 +74,7 @@ macro_rules! assert_float_array_eq(
 mod analytical;
 mod float;
 
-pub use self::float::FloatType;
+pub use self::float::*;
 
 pub use self::analytical::biquadratic::find_roots_biquadratic;
 pub use self::analytical::cubic::find_roots_cubic;
