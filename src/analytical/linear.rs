@@ -48,12 +48,12 @@ use super::super::Roots;
 pub fn find_roots_linear<F: FloatType>(a1: F, a0: F) -> Roots<F> {
     if a1 == F::zero() {
         if a0 == F::zero() {
-            Roots::One([F::zero()])
+            Roots::one(F::zero())
         } else {
-            Roots::No([])
+            Roots::zero()
         }
     } else {
-        Roots::One([-a0 / a1])
+        Roots::one(-a0 / a1)
     }
 }
 

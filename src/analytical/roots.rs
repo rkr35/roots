@@ -23,99 +23,72 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 use super::super::FloatType;
+use core::iter::FusedIterator;
 
-/// Sorted and unique list of roots of an equation.
-#[derive(Debug, PartialEq)]
-pub enum Roots<F: FloatType> {
-    /// Equation has no roots
-    No([F; 0]),
-    /// Equation has one root (or all roots of the equation are the same)
-    One([F; 1]),
-    /// Equation has two roots
-    Two([F; 2]),
-    /// Equation has three roots
-    Three([F; 3]),
-    /// Equation has four roots
-    Four([F; 4]),
+#[derive(Default)]
+pub struct Roots<F> where F: FloatType {
+    roots: [F; 4],
+    num_roots: usize,
+    cursor: usize,
 }
 
-impl<F: FloatType> AsRef<[F]> for Roots<F> {
-    fn as_ref(&self) -> &[F] {
-        match self {
-            &Roots::No(ref x) => x,
-            &Roots::One(ref x) => x,
-            &Roots::Two(ref x) => x,
-            &Roots::Three(ref x) => x,
-            &Roots::Four(ref x) => x,
+impl<F> Roots<F> where F: FloatType {
+    pub fn add_new_root(&mut self, root: F) {
+        if self.num_roots < self.roots.len() {
+            self.roots[self.num_roots] = root;
+            self.num_roots += 1;
+        }
+    }   
+
+    pub fn zero() -> Self {
+        Self::default()
+    }
+
+    pub fn one(root: F) -> Self {
+        Self {
+            roots: [root, F::default(), F::default(), F::default()],
+            num_roots: 1,
+            ..Default::default()
+        }
+    }
+
+    pub fn two(root1: F, root2: F) -> Self {
+        Self {
+            roots: [root1, root2, F::default(), F::default()],
+            num_roots: 2,
+            ..Default::default()
+        }
+    }
+
+    pub fn three(root1: F, root2: F, root3: F) -> Self {
+        Self {
+            roots: [root1, root2, root3, F::default()],
+            num_roots: 3,
+            ..Default::default()
+        }
+    }
+
+    pub fn four(root1: F, root2: F, root3: F, root4: F) -> Self {
+        Self {
+            roots: [root1, root2, root3, root4],
+            num_roots: 4,
+            ..Default::default()
         }
     }
 }
 
-impl<F: FloatType> Roots<F> {
-    fn check_new_root(&self, new_root: F) -> (bool, usize) {
-        let mut pos = 0;
-        let mut exists = false;
+impl<F> Iterator for Roots<F> where F: FloatType {
+    type Item = F;
 
-        for x in self.as_ref().iter() {
-            if *x == new_root {
-                exists = true;
-                break;
-            }
-            if *x > new_root {
-                break;
-            }
-            pos = pos + 1;
-        }
-
-        (exists, pos)
-    }
-
-    /// Add a new root to existing ones keeping the list of roots ordered and unique.
-    pub fn add_new_root(self, new_root: F) -> Self {
-        match self {
-            Roots::No(_) => Roots::One([new_root]),
-            _ => {
-                let (exists, pos) = self.check_new_root(new_root);
-
-                if exists {
-                    self
-                } else {
-                    let old_roots = self.as_ref();
-                    match (old_roots.len(), pos) {
-                        (1, 0) => Roots::Two([new_root, old_roots[0]]),
-                        (1, 1) => Roots::Two([old_roots[0], new_root]),
-                        (2, 0) => Roots::Three([new_root, old_roots[0], old_roots[1]]),
-                        (2, 1) => Roots::Three([old_roots[0], new_root, old_roots[1]]),
-                        (2, 2) => Roots::Three([old_roots[0], old_roots[1], new_root]),
-                        (3, 0) => Roots::Four([new_root, old_roots[0], old_roots[1], old_roots[2]]),
-                        (3, 1) => Roots::Four([old_roots[0], new_root, old_roots[1], old_roots[2]]),
-                        (3, 2) => Roots::Four([old_roots[0], old_roots[1], new_root, old_roots[2]]),
-                        (3, 3) => Roots::Four([old_roots[0], old_roots[1], old_roots[2], new_root]),
-                        _ => panic!("Cannot add root"),
-                    }
-                }
-            }
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.cursor == self.num_roots {
+            None
+        } else {
+            let root = self.roots[self.cursor];
+            self.cursor += 1;
+            Some(root)
         }
     }
 }
 
-#[test]
-fn test_roots() {
-    let mut roots = Roots::One([1f32]);
-    assert_eq!(roots, Roots::One([1f32]));
-
-    roots = roots.add_new_root(1f32);
-    assert_eq!(roots, Roots::One([1f32]));
-
-    roots = roots.add_new_root(0f32);
-    assert_eq!(roots, Roots::Two([0f32, 1f32]));
-
-    roots = roots.add_new_root(0f32);
-    assert_eq!(roots, Roots::Two([0f32, 1f32]));
-
-    roots = roots.add_new_root(3f32);
-    assert_eq!(roots, Roots::Three([0f32, 1f32, 3f32]));
-
-    roots = roots.add_new_root(2f32);
-    assert_eq!(roots, Roots::Four([0f32, 1f32, 2f32, 3f32]));
-}
+impl<F> FusedIterator for Roots<F> where F: FloatType {}

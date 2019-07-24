@@ -48,6 +48,7 @@ pub trait FloatType:
     + Sub<Output = Self>
     + Mul<Output = Self>
     + Div<Output = Self>
+    + Default
 {
     #[inline]
     fn zero() -> Self;
