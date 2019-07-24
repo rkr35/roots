@@ -71,10 +71,10 @@ macro_rules! assert_float_array_eq(
     })
 );
 
-mod analytical;
-mod float;
+pub mod analytical;
+pub mod float;
 
-pub use self::float::*;
+pub use self::float::FloatType;
 
 pub use self::analytical::biquadratic::find_roots_biquadratic;
 pub use self::analytical::cubic::find_roots_cubic;
@@ -84,4 +84,4 @@ pub use self::analytical::linear::find_roots_linear;
 pub use self::analytical::quadratic::find_roots_quadratic;
 pub use self::analytical::quartic::find_roots_quartic;
 pub use self::analytical::quartic_depressed::find_roots_quartic_depressed;
-pub use self::analytical::roots::*;
+pub use self::analytical::roots::Roots;
