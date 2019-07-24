@@ -84,4 +84,4 @@ pub use self::analytical::linear::find_roots_linear;
 pub use self::analytical::quadratic::find_roots_quadratic;
 pub use self::analytical::quartic::find_roots_quartic;
 pub use self::analytical::quartic_depressed::find_roots_quartic_depressed;
-pub use self::analytical::roots::Roots;
+pub use self::analytical::roots::*;
