@@ -23,8 +23,6 @@ path = "src/lib.rs"
 [dev-dependencies]
 bencher = "0.1.5"
 
-[dependencies]
-simdeez = "0.6.4"
 
 [[bench]]
 name="benches"

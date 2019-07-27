@@ -22,16 +22,12 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-use core::f32;
-use core::f64;
 use core::fmt::Debug;
 use core::ops::Add;
 use core::ops::Div;
 use core::ops::Mul;
 use core::ops::Neg;
 use core::ops::Sub;
-
-use simdeez::libm::*;
 
 /// Generic type that lists functions and constants needed in calculations.
 /// Default implementations for f32 and f64 are provided.
@@ -119,26 +115,26 @@ impl FloatType for f32 {
     }
     #[inline]
     fn two_third_pi() -> Self {
-        2f32 * f32::consts::FRAC_PI_3
+        2f32 * core::f32::consts::FRAC_PI_3
     }
     #[inline]
     fn pi() -> Self {
-        f32::consts::PI
+        core::f32::consts::PI
     }
     fn sqrt(self) -> Self {
-        F32Ext::sqrt(self)
+        self.sqrt()
     }
     fn acos(self) -> Self {
-        F32Ext::acos(self)
+        self.acos()
     }
     fn cos(self) -> Self {
-        F32Ext::cos(self)
+        self.cos()
     }
     fn abs(self) -> Self {
-        F32Ext::abs(self)
+        self.abs()
     }
     fn powf(self, n: Self) -> Self {
-        F32Ext::powf(self, n)
+        self.powf(n)
     }
 }
 
@@ -169,26 +165,26 @@ impl FloatType for f64 {
     }
     #[inline]
     fn two_third_pi() -> Self {
-        2f64 * f64::consts::FRAC_PI_3
+        2f64 * core::f64::consts::FRAC_PI_3
     }
     #[inline]
     fn pi() -> Self {
-        f64::consts::PI
+        core::f64::consts::PI
     }
     fn sqrt(self) -> Self {
-        F64Ext::sqrt(self)
+        self.sqrt()
     }
     fn acos(self) -> Self {
-        F64Ext::acos(self)
+        self.acos()
     }
     fn cos(self) -> Self {
-        F64Ext::cos(self)
+        self.cos()
     }
     fn abs(self) -> Self {
-        F64Ext::abs(self)
+        self.abs()
     }
     fn powf(self, n: Self) -> Self {
-        F64Ext::powf(self, n)
+        self.powf(n)
     }
 }
 
