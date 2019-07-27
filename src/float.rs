@@ -45,33 +45,22 @@ pub trait FloatType:
     + Div<Output = Self>
     + Default
 {
-    #[inline]
     fn zero() -> Self;
-    #[inline]
     fn one() -> Self;
-    #[inline]
     fn two() -> Self;
-    #[inline]
     fn three() -> Self;
-    #[inline]
     fn pi() -> Self;
-    #[inline]
     fn one_third() -> Self;
-    #[inline]
     fn four() -> Self;
-    #[inline]
     fn five() -> Self {
         Self::two() + Self::three()
     }
-    #[inline]
     fn nine() -> Self {
         Self::three() * Self::three()
     }
-    #[inline]
     fn twenty_seven() -> Self {
         Self::nine() * Self::three()
     }
-    #[inline]
     fn two_third_pi() -> Self;
     fn sqrt(self) -> Self;
     /// The cubic root function is pow(x, 1/3) accepting negative arguments
@@ -89,35 +78,35 @@ pub trait FloatType:
 }
 
 impl FloatType for f32 {
-    #[inline]
+    
     fn zero() -> Self {
         0f32
     }
-    #[inline]
+    
     fn one_third() -> Self {
         1f32 / 3f32
     }
-    #[inline]
+    
     fn one() -> Self {
         1f32
     }
-    #[inline]
+    
     fn two() -> Self {
         2f32
     }
-    #[inline]
+    
     fn three() -> Self {
         3f32
     }
-    #[inline]
+    
     fn four() -> Self {
         4f32
     }
-    #[inline]
+    
     fn two_third_pi() -> Self {
         2f32 * core::f32::consts::FRAC_PI_3
     }
-    #[inline]
+    
     fn pi() -> Self {
         core::f32::consts::PI
     }
@@ -139,35 +128,35 @@ impl FloatType for f32 {
 }
 
 impl FloatType for f64 {
-    #[inline]
+    
     fn zero() -> Self {
         0f64
     }
-    #[inline]
+    
     fn one_third() -> Self {
         1f64 / 3f64
     }
-    #[inline]
+    
     fn one() -> Self {
         1f64
     }
-    #[inline]
+    
     fn two() -> Self {
         2f64
     }
-    #[inline]
+    
     fn three() -> Self {
         3f64
     }
-    #[inline]
+    
     fn four() -> Self {
         4f64
     }
-    #[inline]
+    
     fn two_third_pi() -> Self {
         2f64 * core::f64::consts::FRAC_PI_3
     }
-    #[inline]
+    
     fn pi() -> Self {
         core::f64::consts::PI
     }
