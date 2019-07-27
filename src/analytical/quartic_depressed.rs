@@ -25,6 +25,8 @@
 use super::super::FloatType;
 use super::super::Roots;
 
+use core::cmp::Ordering;
+
 /// Solves a depressed quartic equation x^4 + a2*x^2 + a1*x + a0 = 0.
 ///
 /// Returned roots are ordered. Precision is about 1e-14 for f64.
@@ -61,8 +63,9 @@ pub fn find_roots_quartic_depressed<F: FloatType>(a2: F, a1: F, a0: F) -> Roots<
         );
 
         // At least one root always exists. The last root is the maximal one.
-        let y = match super::cubic_normalized::find_roots_cubic_normalized(b2, b1, b0).last() {
-            Some(last) => last,
+        let y = match super::cubic_normalized::find_roots_cubic_normalized(b2, b1, b0)
+            .max_by(|a, b| a.partial_cmp(&b).unwrap_or(Ordering::Equal)) {
+            Some(max) => max,
             None => return Roots::zero()
         };
 
